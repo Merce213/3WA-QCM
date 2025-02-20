@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 export const JWT_SECRET = process.env.JWT_SECRET || "votre_secret_par_defaut";
 
 export const PORT = process.env.PORT || 3000;

@@ -1,26 +1,22 @@
 import { Router } from "express";
 import AuthController from "../controllers/AuthController";
+import AuthMiddleware from "../middlewares/authMiddleware";
 import { validateData } from "../middlewares/validateData";
 import { UserSignInSchema, UserSignUpSchema } from "../schemas/UserSchema";
-import {
-	authenticate,
-	checkAuthorization,
-} from "../middlewares/authMiddleware";
 
 const router: Router = Router();
 
 router.post(
 	"/register",
-	validateData(UserSignUpSchema),
+	[AuthMiddleware.checkNotAuthenticated, validateData(UserSignUpSchema)],
 	AuthController.register
 );
-router.post("/login", validateData(UserSignInSchema), AuthController.login);
-
-router.get("/user/:id", AuthController.getUser);
-router.put(
-	"/user/:id",
-	[authenticate, checkAuthorization()],
-	AuthController.updateUser
+router.post(
+	"/login",
+	[AuthMiddleware.checkNotAuthenticated, validateData(UserSignInSchema)],
+	AuthController.login
 );
+router.post("/logout", [AuthMiddleware.authenticate], AuthController.logout);
+router.get("/me", [AuthMiddleware.authenticate], AuthController.me);
 
 export default router;

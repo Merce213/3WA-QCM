@@ -37,11 +37,11 @@ class MySQLAdapter {
 		return rows;
 	}
 
-	public async execute(
+	public async execute<T extends QueryResult>(
 		sql: string,
 		params?: any[]
-	): Promise<ResultSetHeader> {
-		const [result] = await this.pool.execute<ResultSetHeader>(sql, params);
+	): Promise<T> {
+		const [result] = await this.pool.execute<T>(sql, params);
 		return result;
 	}
 
